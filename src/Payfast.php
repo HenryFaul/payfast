@@ -126,7 +126,7 @@ class Payfast implements PaymentProcessor
         $this->button = $submitButton;
         $this->vars = $this->paymentVars();
         $this->vars['signature'] = $this->getSignature();
-        return $this->buildForm();
+        return $this->buildFormData();
     }
 
     public function paymentVars()
@@ -200,6 +200,28 @@ class Payfast implements PaymentProcessor
 
         return $htmlForm.'</form>';
     }
+
+    public function buildFormData(){
+
+        $this->getHost();
+        $form_data=['id'=>'payfast-pay-form'];
+        $action = "https://".$this->host."/eng/process";
+        $form_data['action']=$action;
+
+        foreach($this->vars as $name => $value)
+        {
+            // empty fields should not be sent across it breaks certain payment methods
+            if (!empty($value) || $value === 0) {
+
+                $form_data[$name]=$value;
+
+                $htmlForm .= '<input type="hidden" name="' . $name . '" value="' . $value . '">';
+            }
+        }
+
+        return $form_data;
+    }
+
 
     public function verify($request, $amount)
     {
