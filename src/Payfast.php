@@ -215,7 +215,6 @@ class Payfast implements PaymentProcessor
 
                 $form_data[$name]=$value;
 
-                $htmlForm .= '<input type="hidden" name="' . $name . '" value="' . $value . '">';
             }
         }
 
